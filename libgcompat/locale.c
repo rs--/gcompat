@@ -48,9 +48,3 @@ struct glibc_locale *newlocale(int mask, const char *name, locale_t base) {
 
 	return ret;
 }
-
-void freelocale(struct glibc_locale *loc) {
-	free(loc->__names[0]);
-	__freelocale(loc->__locales[0]);
-	free(loc);
-}

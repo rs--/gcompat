@@ -2,6 +2,7 @@
 #include <errno.h>  /* program_invocation_name */
 #include <stdarg.h> /* va_list, va_start, va_end */
 #include <stdio.h>  /* fflush, fputc, fputs, stderr, stdout, vfprintf */
+#include <stdlib.h> /* exit */
 #include <string.h> /* strerror */
 
 /**
@@ -24,4 +25,7 @@ void error(int status, int errnum, const char *format, ...)
 		fputs(strerror(errnum), stderr);
 		fputc('\n', stderr);
 	}
+
+  if (status)
+    exit(status);
 }

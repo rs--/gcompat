@@ -1,4 +1,5 @@
 #include <stddef.h> /* NULL */
+#include <utmp.h>
 #include <utmpx.h>   /* struct utmp */
 
 /**

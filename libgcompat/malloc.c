@@ -62,15 +62,6 @@ void *__libc_malloc(size_t size)
 }
 alias(__libc_malloc, __malloc);
 
-void *__libc_memalign(size_t align, size_t len)
-{
-	void *result = NULL;
-	if (posix_memalign(&result, align, len) != 0)
-		return NULL;
-	return result;
-}
-alias(__libc_memalign, __memalign);
-
 void *__libc_realloc(void *ptr, size_t size)
 {
 	return realloc(ptr, size);

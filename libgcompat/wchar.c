@@ -1,6 +1,7 @@
 #include <assert.h> /* assert */
 #include <stdarg.h> /* va_list, va_start, va_end */
 #include <stddef.h> /* size_t */
+#include <stdlib.h> /* abort */
 #include <wchar.h>  /* wchar_t, *wprintf */
 
 int __vswprintf_chk(wchar_t *s, size_t n, int flag, size_t slen,
@@ -134,4 +135,65 @@ long int wcstol_l(const wchar_t *nptr, wchar_t **endptr, int base,
 double wcstod_l(const wchar_t *nptr, wchar_t **endptr, locale_t loc)
 {
 	return wcstod(nptr, endptr);
+}
+
+/**
+ * Concatenate two wide-character strings, with buffer overflow checking.
+ */
+wchar_t * __wcscat_chk(wchar_t *dest, const wchar_t *src, size_t len)
+{
+    wchar_t *tmp1 = dest;
+    const wchar_t *tmp2 = src;
+    wchar_t c;
+
+    /* Move to the end of the dest. Abort if it's too short  */
+    do
+    {
+        if (len-- == 0)
+            abort();
+        c = *tmp1++;
+    }
+    while (c != L'\0');
+
+    /* Append characters in src to the dest. Abort if it's too short  */
+    do
+    {
+        if (len-- == 0)
+            abort();
+        c = *tmp2++;
+        *tmp1++ = c;
+    }
+    while (c != L'\0');
+
+    return dest;
+}
+
+/**
+ * Copy a fixed-size string of wide characters, with buffer overflow checking.
+ */
+wchar_t * __wcsncpy(wchar_t *dest, const wchar_t *src, size_t len)
+{
+    wchar_t *tmp1 = dest;
+    const wchar_t *tmp2 = src;
+    wchar_t c = *src;
+
+    for (size_t i = 0; i < len; i++)
+    {
+        /* If src has reached the null terminator, don't advance! */
+        c = (c == L'\0') ? c : *tmp2++;
+        *tmp1++ = c;
+    }
+
+    return dest;
+}
+
+/**
+ * Concatenate two wide-character strings, with buffer overflow checking.
+ */
+wchar_t* __wcsncpy_chk(wchar_t *dest, const wchar_t *src, size_t n1, size_t n2)
+{
+    if (n2 < n1)
+        abort();
+
+    return __wcsncpy(dest, src, n1);
 }
